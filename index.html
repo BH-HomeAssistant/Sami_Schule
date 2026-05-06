@@ -1,0 +1,537 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Samis Französisch-Vokabeltrainer</title>
+  <style>
+    :root {
+      --bg: #f7f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #697386;
+      --accent: #3b82f6;
+      --good: #16a34a;
+      --bad: #dc2626;
+      --warn: #f59e0b;
+      --border: #e5e7eb;
+      --shadow: 0 12px 30px rgba(15, 23, 42, 0.10);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: linear-gradient(180deg, #eff6ff 0%, var(--bg) 42%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .app {
+      width: min(920px, 100%);
+      margin: 0 auto;
+      padding: 18px;
+    }
+
+    header {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+
+    h1 {
+      font-size: clamp(1.45rem, 4vw, 2.2rem);
+      margin: 0;
+      line-height: 1.1;
+    }
+
+    .subtitle {
+      color: var(--muted);
+      margin: 6px 0 0;
+      font-size: 0.95rem;
+    }
+
+    .pill {
+      background: white;
+      border: 1px solid var(--border);
+      padding: 8px 12px;
+      border-radius: 999px;
+      font-weight: 700;
+      white-space: nowrap;
+      box-shadow: 0 4px 12px rgba(15, 23, 42, 0.06);
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 18px;
+      box-shadow: var(--shadow);
+      margin-bottom: 14px;
+    }
+
+    .controls {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+    }
+
+    @media (min-width: 760px) {
+      .controls { grid-template-columns: repeat(4, 1fr); }
+    }
+
+    button, select, input {
+      font: inherit;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      background: white;
+      color: var(--text);
+    }
+
+    button {
+      cursor: pointer;
+      font-weight: 800;
+      transition: transform 0.08s ease, box-shadow 0.08s ease, background 0.08s ease;
+      touch-action: manipulation;
+    }
+
+    button:active { transform: scale(0.98); }
+
+    .primary {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: white;
+    }
+
+    .good { background: var(--good); border-color: var(--good); color: white; }
+    .bad { background: var(--bad); border-color: var(--bad); color: white; }
+    .warn { background: var(--warn); border-color: var(--warn); color: white; }
+
+    .mode-tabs {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .mode-tabs button.active {
+      background: #dbeafe;
+      border-color: #93c5fd;
+      color: #1d4ed8;
+    }
+
+    .question {
+      text-align: center;
+      padding: 18px 4px 8px;
+    }
+
+    .small-label {
+      color: var(--muted);
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      font-size: 0.75rem;
+    }
+
+    .term {
+      font-size: clamp(2rem, 8vw, 4rem);
+      font-weight: 900;
+      margin: 12px 0;
+      line-height: 1.08;
+    }
+
+    .hint {
+      color: var(--muted);
+      min-height: 1.4em;
+    }
+
+    .answer-grid {
+      display: grid;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    @media (min-width: 600px) {
+      .answer-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .answer-btn {
+      min-height: 62px;
+      text-align: left;
+      font-weight: 750;
+    }
+
+    .feedback {
+      margin-top: 14px;
+      padding: 12px 14px;
+      border-radius: 16px;
+      display: none;
+      font-weight: 800;
+    }
+
+    .feedback.show { display: block; }
+    .feedback.ok { background: #dcfce7; color: #166534; }
+    .feedback.no { background: #fee2e2; color: #991b1b; }
+
+    .type-row {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+      margin-top: 18px;
+    }
+
+    @media (min-width: 620px) {
+      .type-row { grid-template-columns: 1fr auto auto; }
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 10px;
+      text-align: center;
+    }
+
+    .stat {
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 12px;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: 1.4rem;
+    }
+
+    .list {
+      display: grid;
+      gap: 8px;
+      max-height: 300px;
+      overflow: auto;
+      padding-right: 4px;
+    }
+
+    .vocab-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 10px;
+      background: #fbfdff;
+    }
+
+    .vocab-row span:nth-child(1) { font-weight: 800; }
+    .vocab-row span:nth-child(2) { color: var(--muted); }
+
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <header>
+      <div>
+        <h1>🇫🇷 Samis Vokabeltrainer</h1>
+        <p class="subtitle">Unité 4 – Volet 2/3 · kurz, spielerisch, handyfreundlich</p>
+      </div>
+      <div class="pill">⭐ <span id="points">0</span></div>
+    </header>
+
+    <section class="card">
+      <div class="controls">
+        <select id="direction">
+          <option value="fr-de">Französisch → Deutsch</option>
+          <option value="de-fr">Deutsch → Französisch</option>
+        </select>
+        <select id="category">
+          <option value="all">Alle Vokabeln</option>
+          <option value="possessiv">Possessivbegleiter</option>
+          <option value="schule">Schule</option>
+          <option value="meinung">Meinung</option>
+          <option value="mengen">Mengenangaben</option>
+          <option value="verben">Verben</option>
+          <option value="adjektive">Adjektive</option>
+        </select>
+        <button class="primary" id="newRound">Neue Runde</button>
+        <button id="toggleList">Vokabelliste</button>
+      </div>
+      <div class="mode-tabs">
+        <button id="modeCard" class="active">Karte</button>
+        <button id="modeChoice">Quiz</button>
+        <button id="modeType">Tippen</button>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="stats">
+        <div class="stat"><strong id="correct">0</strong>richtig</div>
+        <div class="stat"><strong id="wrong">0</strong>falsch</div>
+        <div class="stat"><strong id="streak">0</strong>Serie</div>
+      </div>
+    </section>
+
+    <section class="card" id="trainer">
+      <div class="question">
+        <div class="small-label" id="questionLabel">Französisch</div>
+        <div class="term" id="term">notre</div>
+        <div class="hint" id="hint">Tippe auf „Lösung zeigen“ oder wähle einen Modus.</div>
+      </div>
+
+      <div id="cardMode">
+        <button class="primary" id="showAnswer" style="width:100%;">Lösung zeigen</button>
+        <div class="feedback" id="cardAnswer"></div>
+        <div class="answer-grid" style="margin-top:12px;">
+          <button class="good" id="knewIt">Gewusst ✅</button>
+          <button class="bad" id="didntKnow">Nochmal üben 🔁</button>
+        </div>
+      </div>
+
+      <div id="choiceMode" class="hidden">
+        <div class="answer-grid" id="choices"></div>
+      </div>
+
+      <div id="typeMode" class="hidden">
+        <div class="type-row">
+          <input id="typedAnswer" placeholder="Antwort eintippen …" autocomplete="off" />
+          <button class="primary" id="checkTyped">Prüfen</button>
+          <button id="skipTyped">Weiter</button>
+        </div>
+      </div>
+
+      <div class="feedback" id="feedback"></div>
+    </section>
+
+    <section class="card hidden" id="vocabListCard">
+      <h2>Vokabelliste</h2>
+      <div class="list" id="vocabList"></div>
+    </section>
+  </main>
+
+  <script>
+    const vocab = [
+      { fr: "notre / nos", de: "unser/e", cat: "possessiv" },
+      { fr: "votre / vos", de: "euer/eure, Ihr/e", cat: "possessiv" },
+      { fr: "leur / leurs", de: "ihr/e", cat: "possessiv" },
+      { fr: "Pourquoi ?", de: "Warum?", cat: "meinung" },
+      { fr: "la carte", de: "die Karte", cat: "schule" },
+      { fr: "allemand / allemande", de: "deutsch", cat: "adjektive" },
+      { fr: "le correspondant / la correspondante", de: "der Brieffreund / die Brieffreundin", cat: "schule" },
+      { fr: "déjà", de: "schon, bereits", cat: "schule" },
+      { fr: "la journée", de: "der Tag im Ablauf", cat: "schule" },
+      { fr: "ensuite", de: "dann", cat: "schule" },
+      { fr: "la matière", de: "das Schulfach", cat: "schule" },
+      { fr: "trop", de: "total, voll / zu viel", cat: "mengen" },
+      { fr: "bizarre", de: "merkwürdig", cat: "adjektive" },
+      { fr: "le cauchemar", de: "der Albtraum", cat: "schule" },
+      { fr: "la cour", de: "der Schulhof, der Hof", cat: "schule" },
+      { fr: "le terrain", de: "der Platz", cat: "schule" },
+      { fr: "Ça dépend.", de: "Es kommt darauf an.", cat: "meinung" },
+      { fr: "avoir de la chance", de: "Glück haben", cat: "meinung" },
+      { fr: "expliquer qc", de: "etwas erklären", cat: "verben" },
+      { fr: "raconter sa vie", de: "seine Lebensgeschichte erzählen", cat: "verben" },
+      { fr: "râler", de: "meckern, motzen", cat: "verben" },
+      { fr: "terminer qc", de: "etwas beenden, aufhören", cat: "verben" },
+      { fr: "commencer qc", de: "etwas beginnen", cat: "verben" },
+      { fr: "la fois / les fois", de: "das Mal", cat: "schule" },
+      { fr: "Ça suffit !", de: "Es reicht!", cat: "meinung" },
+      { fr: "Quand ?", de: "Wann?", cat: "meinung" },
+      { fr: "avoir cours", de: "Unterricht haben", cat: "schule" },
+      { fr: "le cours", de: "der Unterricht, die Unterrichtsstunde", cat: "schule" },
+      { fr: "donner son avis", de: "seine Meinung äußern", cat: "meinung" },
+      { fr: "donner qc", de: "etwas geben / aufgeben", cat: "verben" },
+      { fr: "le commentaire", de: "der Kommentar", cat: "schule" },
+      { fr: "un an", de: "ein Jahr", cat: "schule" },
+      { fr: "une ambiance", de: "eine Stimmung, eine Atmosphäre", cat: "schule" },
+      { fr: "beaucoup de qc", de: "viel/viele", cat: "mengen" },
+      { fr: "trop de qc", de: "zu viel/viele", cat: "mengen" },
+      { fr: "assez de qc", de: "genug, genügend", cat: "mengen" },
+      { fr: "ne … pas assez de qc", de: "nicht genug", cat: "mengen" },
+      { fr: "ne … pas de qc", de: "kein/keine/keinen", cat: "mengen" },
+      { fr: "ne … plus de qc", de: "kein/keine/keinen mehr", cat: "mengen" },
+      { fr: "je trouve que", de: "ich finde, dass", cat: "meinung" },
+      { fr: "la rentrée", de: "der Schuljahresbeginn", cat: "schule" },
+      { fr: "un ascenseur", de: "ein Aufzug", cat: "schule" },
+      { fr: "le bruit", de: "der Lärm, das Geräusch", cat: "schule" },
+      { fr: "gaspiller qc", de: "etwas verschwenden", cat: "verben" },
+      { fr: "le pain", de: "das Brot", cat: "schule" },
+      { fr: "le plat", de: "das Hauptgericht, das Gericht", cat: "schule" },
+      { fr: "propre", de: "sauber", cat: "adjektive" },
+      { fr: "vite", de: "schnell", cat: "adjektive" },
+      { fr: "Au secours !", de: "Zu Hilfe!", cat: "meinung" },
+      { fr: "nul / nulle", de: "miserabel, doof, schlecht", cat: "adjektive" },
+      { fr: "C’est l’horreur !", de: "Das ist schrecklich!", cat: "meinung" },
+      { fr: "C’est nul.", de: "Das ist doof/schlecht.", cat: "meinung" },
+      { fr: "C’est dommage !", de: "Das ist schade!", cat: "meinung" },
+      { fr: "C’est drôle !", de: "Das ist lustig!", cat: "meinung" },
+      { fr: "C’est super !", de: "Das ist super!", cat: "meinung" },
+      { fr: "bon / bonne", de: "gut, lecker", cat: "adjektive" },
+      { fr: "être nul/nulle en qc", de: "in etwas schlecht sein", cat: "adjektive" },
+      { fr: "être bon/bonne en qc", de: "in etwas gut sein", cat: "adjektive" }
+    ];
+
+    let mode = "card";
+    let current = null;
+    let correct = 0;
+    let wrong = 0;
+    let streak = 0;
+    let points = Number(localStorage.getItem("samiPoints") || 0);
+
+    const $ = (id) => document.getElementById(id);
+
+    function filteredVocab() {
+      const cat = $("category").value;
+      return cat === "all" ? vocab : vocab.filter(v => v.cat === cat);
+    }
+
+    function normalize(text) {
+      return text.toLowerCase()
+        .replaceAll("’", "'")
+        .replace(/[.,!?]/g, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    function askKey() {
+      return $("direction").value === "fr-de" ? "fr" : "de";
+    }
+
+    function answerKey() {
+      return $("direction").value === "fr-de" ? "de" : "fr";
+    }
+
+    function pickRandom(list) {
+      return list[Math.floor(Math.random() * list.length)];
+    }
+
+    function newQuestion() {
+      const list = filteredVocab();
+      current = pickRandom(list);
+      $("questionLabel").textContent = askKey() === "fr" ? "Französisch" : "Deutsch";
+      $("term").textContent = current[askKey()];
+      $("hint").textContent = mode === "card" ? "Erst überlegen, dann Lösung zeigen." : "Wähle oder tippe die richtige Antwort.";
+      $("feedback").className = "feedback";
+      $("feedback").textContent = "";
+      $("cardAnswer").className = "feedback";
+      $("cardAnswer").textContent = "";
+      $("typedAnswer").value = "";
+      buildChoices();
+      updateStats();
+    }
+
+    function buildChoices() {
+      const container = $("choices");
+      container.innerHTML = "";
+      const list = filteredVocab();
+      const answer = current[answerKey()];
+      const options = [answer];
+      while (options.length < 4 && options.length < list.length) {
+        const candidate = pickRandom(list)[answerKey()];
+        if (!options.includes(candidate)) options.push(candidate);
+      }
+      options.sort(() => Math.random() - 0.5);
+      options.forEach(option => {
+        const btn = document.createElement("button");
+        btn.className = "answer-btn";
+        btn.textContent = option;
+        btn.onclick = () => checkChoice(option);
+        container.appendChild(btn);
+      });
+    }
+
+    function showFeedback(ok, text) {
+      const box = $("feedback");
+      box.className = "feedback show " + (ok ? "ok" : "no");
+      box.textContent = text;
+    }
+
+    function mark(ok) {
+      if (ok) {
+        correct++;
+        streak++;
+        points += 10 + Math.min(streak, 5);
+      } else {
+        wrong++;
+        streak = 0;
+        points = Math.max(0, points - 2);
+      }
+      localStorage.setItem("samiPoints", points);
+      updateStats();
+    }
+
+    function checkChoice(option) {
+      const answer = current[answerKey()];
+      const ok = option === answer;
+      mark(ok);
+      showFeedback(ok, ok ? "Richtig! 🎉" : `Fast! Richtig ist: ${answer}`);
+      setTimeout(newQuestion, ok ? 750 : 1600);
+    }
+
+    function checkTyped() {
+      const typed = normalize($("typedAnswer").value);
+      const answer = normalize(current[answerKey()]);
+      const ok = typed.length > 0 && (answer.includes(typed) || typed.includes(answer));
+      mark(ok);
+      showFeedback(ok, ok ? "Richtig! 🎉" : `Richtig wäre: ${current[answerKey()]}`);
+      if (ok) setTimeout(newQuestion, 900);
+    }
+
+    function updateStats() {
+      $("correct").textContent = correct;
+      $("wrong").textContent = wrong;
+      $("streak").textContent = streak;
+      $("points").textContent = points;
+    }
+
+    function setMode(newMode) {
+      mode = newMode;
+      $("cardMode").classList.toggle("hidden", mode !== "card");
+      $("choiceMode").classList.toggle("hidden", mode !== "choice");
+      $("typeMode").classList.toggle("hidden", mode !== "type");
+      $("modeCard").classList.toggle("active", mode === "card");
+      $("modeChoice").classList.toggle("active", mode === "choice");
+      $("modeType").classList.toggle("active", mode === "type");
+      newQuestion();
+    }
+
+    function renderList() {
+      const container = $("vocabList");
+      container.innerHTML = "";
+      filteredVocab().forEach(v => {
+        const row = document.createElement("div");
+        row.className = "vocab-row";
+        row.innerHTML = `<span>${v.fr}</span><span>${v.de}</span>`;
+        container.appendChild(row);
+      });
+    }
+
+    $("showAnswer").onclick = () => {
+      const box = $("cardAnswer");
+      box.className = "feedback show ok";
+      box.textContent = current[answerKey()];
+    };
+
+    $("knewIt").onclick = () => { mark(true); newQuestion(); };
+    $("didntKnow").onclick = () => { mark(false); newQuestion(); };
+    $("checkTyped").onclick = checkTyped;
+    $("skipTyped").onclick = newQuestion;
+    $("typedAnswer").addEventListener("keydown", e => { if (e.key === "Enter") checkTyped(); });
+    $("newRound").onclick = newQuestion;
+    $("category").onchange = () => { renderList(); newQuestion(); };
+    $("direction").onchange = newQuestion;
+    $("modeCard").onclick = () => setMode("card");
+    $("modeChoice").onclick = () => setMode("choice");
+    $("modeType").onclick = () => setMode("type");
+    $("toggleList").onclick = () => {
+      $("vocabListCard").classList.toggle("hidden");
+      renderList();
+    };
+
+    renderList();
+    newQuestion();
+  </script>
+</body>
+</html>

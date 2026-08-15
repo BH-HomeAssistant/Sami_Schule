@@ -80,7 +80,7 @@
     }
 
     @media (min-width: 760px) {
-      .controls { grid-template-columns: repeat(5, 1fr); }
+      .controls { grid-template-columns: repeat(6, 1fr); }
     }
 
     button, select, input {
@@ -236,13 +236,18 @@
     <header>
       <div>
         <h1>🇫🇷 Samis Vokabeltrainer</h1>
-        <p class="subtitle">Unité 4–5 · Module 5–6 · kurz, spielerisch, handyfreundlich</p>
+        <p class="subtitle">Alte + neue Vokabeln · nach Lernset auswählbar · handyfreundlich</p>
       </div>
       <div class="pill">⭐ <span id="points">0</span></div>
     </header>
 
     <section class="card">
       <div class="controls">
+        <select id="studyset">
+          <option value="new">Heute (15.08.2026)</option>
+          <option value="old">Alte Vokabeln</option>
+          <option value="all">Alle gemischt</option>
+        </select>
         <select id="lesson">
           <option value="all">Alle Lektionen</option>
           <option value="u4">Unité 4</option>
@@ -478,9 +483,16 @@
       { fr: "le bisou", de: "das Küsschen", cat: "sonstiges", lesson: "m6" }
     ];
 
-    // Alle bereits vorhandenen Vokabeln stammen aus Unité 4.
+    // Lernsets:
+    // - bestehende Vokabeln = "old"
+    // - neu hinzugefügte Vokabeln vom 15.08.2026 = "2026-08-15"
     vocab.forEach(v => {
-      if (!v.lesson) v.lesson = "u4";
+      if (!v.lesson) {
+        v.lesson = "u4";
+        v.batch = "old";
+      } else {
+        v.batch = "2026-08-15";
+      }
     });
 
     let mode = "card";
@@ -495,10 +507,18 @@
     function filteredVocab() {
       const cat = $("category").value;
       const lesson = $("lesson").value;
-      return vocab.filter(v =>
-        (cat === "all" || v.cat === cat) &&
-        (lesson === "all" || v.lesson === lesson)
-      );
+      const studyset = $("studyset").value;
+
+      return vocab.filter(v => {
+        const setMatch =
+          studyset === "all" ||
+          (studyset === "old" && v.batch === "old") ||
+          (studyset === "new" && v.batch === "2026-08-15");
+
+        return setMatch &&
+          (cat === "all" || v.cat === cat) &&
+          (lesson === "all" || v.lesson === lesson);
+      });
     }
 
     function normalize(text) {
@@ -646,6 +666,13 @@
     $("newRound").onclick = newQuestion;
     $("category").onchange = () => { renderList(); newQuestion(); };
     $("lesson").onchange = () => { renderList(); newQuestion(); };
+    $("studyset").onchange = () => {
+      // Bei Wechsel des Lernsets die Lektion auf "Alle" setzen,
+      // damit nicht versehentlich eine leere Kombination entsteht.
+      $("lesson").value = "all";
+      renderList();
+      newQuestion();
+    };
     $("direction").onchange = newQuestion;
     $("modeCard").onclick = () => setMode("card");
     $("modeChoice").onclick = () => setMode("choice");

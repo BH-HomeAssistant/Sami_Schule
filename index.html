@@ -80,7 +80,7 @@
     }
 
     @media (min-width: 760px) {
-      .controls { grid-template-columns: repeat(4, 1fr); }
+      .controls { grid-template-columns: repeat(5, 1fr); }
     }
 
     button, select, input {
@@ -236,13 +236,20 @@
     <header>
       <div>
         <h1>🇫🇷 Samis Vokabeltrainer</h1>
-        <p class="subtitle">Unité 4 – Volet 2/3 · kurz, spielerisch, handyfreundlich</p>
+        <p class="subtitle">Unité 4–5 · Module 5–6 · kurz, spielerisch, handyfreundlich</p>
       </div>
       <div class="pill">⭐ <span id="points">0</span></div>
     </header>
 
     <section class="card">
       <div class="controls">
+        <select id="lesson">
+          <option value="all">Alle Lektionen</option>
+          <option value="u4">Unité 4</option>
+          <option value="u5">Unité 5</option>
+          <option value="m5">Module 5</option>
+          <option value="m6">Module 6</option>
+        </select>
         <select id="direction">
           <option value="fr-de">Französisch → Deutsch</option>
           <option value="de-fr">Deutsch → Französisch</option>
@@ -255,6 +262,12 @@
           <option value="mengen">Mengenangaben</option>
           <option value="verben">Verben</option>
           <option value="adjektive">Adjektive</option>
+          <option value="essen">Essen / Einkaufen</option>
+          <option value="geburtstag">Geburtstag / Feier</option>
+          <option value="wetter">Wetter</option>
+          <option value="reise">Reise / Freizeit</option>
+          <option value="zeit">Zeit</option>
+          <option value="sonstiges">Sonstiges</option>
         </select>
         <button class="primary" id="newRound">Neue Runde</button>
         <button id="toggleList">Vokabelliste</button>
@@ -370,8 +383,105 @@
       { fr: "C’est super !", de: "Das ist super!", cat: "meinung" },
       { fr: "bon / bonne", de: "gut, lecker", cat: "adjektive" },
       { fr: "être nul/nulle en qc", de: "in etwas schlecht sein", cat: "adjektive" },
-      { fr: "être bon/bonne en qc", de: "in etwas gut sein", cat: "adjektive" }
+      { fr: "être bon/bonne en qc", de: "in etwas gut sein", cat: "adjektive" },
+
+      // Unité 5 – Volet 2 / 3
+      { fr: "l’argent", de: "das Geld", cat: "mengen", lesson: "u5" },
+      { fr: "un euro", de: "ein Euro", cat: "mengen", lesson: "u5" },
+      { fr: "le kilo", de: "das Kilo", cat: "mengen", lesson: "u5" },
+      { fr: "Et avec ça ?", de: "Darf es sonst noch etwas sein?", cat: "essen", lesson: "u5" },
+      { fr: "C’est tout.", de: "Das ist alles.", cat: "essen", lesson: "u5" },
+      { fr: "ça fait + prix", de: "das macht + Preis", cat: "mengen", lesson: "u5" },
+      { fr: "ça coûte + prix", de: "das kostet + Preis", cat: "mengen", lesson: "u5" },
+      { fr: "la baguette", de: "das Baguette", cat: "essen", lesson: "u5" },
+      { fr: "C’est quoi ?", de: "Was ist das?", cat: "sonstiges", lesson: "u5" },
+      { fr: "sucré / sucrée", de: "süß, gezuckert", cat: "adjektive", lesson: "u5" },
+      { fr: "salé / salée", de: "salzig, gesalzen", cat: "adjektive", lesson: "u5" },
+      { fr: "la quiche", de: "die Quiche, herzhafter Kuchen", cat: "essen", lesson: "u5" },
+      { fr: "la chouquette", de: "die Chouquette, rundes mit Zucker bestreutes Brandteiggebäck", cat: "essen", lesson: "u5" },
+      { fr: "le secret", de: "das Geheimnis", cat: "sonstiges", lesson: "u5" },
+      { fr: "le site (web)", de: "die (Web-)Seite", cat: "sonstiges", lesson: "u5" },
+      { fr: "la cuisine", de: "das Kochen", cat: "essen", lesson: "u5" },
+      { fr: "la chimie", de: "die Chemie", cat: "schule", lesson: "u5" },
+      { fr: "un exemple", de: "ein Beispiel", cat: "schule", lesson: "u5" },
+      { fr: "la forme", de: "die Form", cat: "sonstiges", lesson: "u5" },
+
+      // Module 5
+      { fr: "la bosse", de: "die Beule", cat: "sonstiges", lesson: "m5" },
+      { fr: "la température", de: "die Temperatur", cat: "wetter", lesson: "m5" },
+      { fr: "le four", de: "der Backofen", cat: "essen", lesson: "m5" },
+      { fr: "chaud / chaude", de: "warm, heiß", cat: "adjektive", lesson: "m5" },
+      { fr: "froid / froide", de: "kalt", cat: "adjektive", lesson: "m5" },
+      { fr: "la pâte", de: "der Teig", cat: "essen", lesson: "m5" },
+      { fr: "le choc", de: "der Schock", cat: "sonstiges", lesson: "m5" },
+      { fr: "intéressant / intéressante", de: "interessant", cat: "adjektive", lesson: "m5" },
+      { fr: "la recette", de: "das (Koch-)Rezept", cat: "essen", lesson: "m5" },
+      { fr: "le gramme", de: "das Gramm", cat: "mengen", lesson: "m5" },
+      { fr: "la levure", de: "das Backpulver, die Hefe", cat: "essen", lesson: "m5" },
+      { fr: "Joyeux anniversaire !", de: "Herzlichen Glückwunsch zum Geburtstag!", cat: "geburtstag", lesson: "m5" },
+      { fr: "un anniversaire", de: "ein Geburtstag", cat: "geburtstag", lesson: "m5" },
+      { fr: "premier / première", de: "erster / erste / erstes", cat: "adjektive", lesson: "m5" },
+      { fr: "janvier", de: "Januar", cat: "zeit", lesson: "m5" },
+      { fr: "février", de: "Februar", cat: "zeit", lesson: "m5" },
+      { fr: "mars", de: "März", cat: "zeit", lesson: "m5" },
+      { fr: "avril", de: "April", cat: "zeit", lesson: "m5" },
+      { fr: "mai", de: "Mai", cat: "zeit", lesson: "m5" },
+      { fr: "juin", de: "Juni", cat: "zeit", lesson: "m5" },
+      { fr: "juillet", de: "Juli", cat: "zeit", lesson: "m5" },
+      { fr: "août", de: "August", cat: "zeit", lesson: "m5" },
+      { fr: "septembre", de: "September", cat: "zeit", lesson: "m5" },
+      { fr: "octobre", de: "Oktober", cat: "zeit", lesson: "m5" },
+      { fr: "novembre", de: "November", cat: "zeit", lesson: "m5" },
+      { fr: "décembre", de: "Dezember", cat: "zeit", lesson: "m5" },
+      { fr: "la fête", de: "die Feier", cat: "geburtstag", lesson: "m5" },
+      { fr: "fêter qc", de: "etwas feiern", cat: "verben", lesson: "m5" },
+      { fr: "inviter qn", de: "jemanden einladen", cat: "verben", lesson: "m5" },
+      { fr: "une invitation", de: "eine Einladung", cat: "geburtstag", lesson: "m5" },
+      { fr: "le skate", de: "das Skateboard", cat: "reise", lesson: "m5" },
+      { fr: "la soirée", de: "der Abend in seinem Verlauf", cat: "zeit", lesson: "m5" },
+      { fr: "le camping", de: "das Zelten, auch: der Zeltplatz", cat: "reise", lesson: "m5" },
+      { fr: "le sac de couchage", de: "der Schlafsack", cat: "reise", lesson: "m5" },
+      { fr: "le cadeau / les cadeaux", de: "das Geschenk / die Geschenke", cat: "geburtstag", lesson: "m5" },
+      { fr: "Je compte sur toi.", de: "Ich zähle auf dich.", cat: "sonstiges", lesson: "m5" },
+
+      // Module 6
+      { fr: "la carte postale", de: "die Postkarte", cat: "reise", lesson: "m6" },
+      { fr: "la balade", de: "der Spaziergang, auch: die Spazierfahrt", cat: "reise", lesson: "m6" },
+      { fr: "le VTT (le vélo tout-terrain)", de: "das Mountainbike", cat: "reise", lesson: "m6" },
+      { fr: "la montagne", de: "der Berg, das Gebirge", cat: "reise", lesson: "m6" },
+      { fr: "il pleut", de: "es regnet", cat: "wetter", lesson: "m6" },
+      { fr: "il fait beau", de: "es ist schönes Wetter", cat: "wetter", lesson: "m6" },
+      { fr: "il fait froid", de: "es ist kalt", cat: "wetter", lesson: "m6" },
+      { fr: "il fait chaud", de: "es ist warm / heiß", cat: "wetter", lesson: "m6" },
+      { fr: "le soleil", de: "die Sonne", cat: "wetter", lesson: "m6" },
+      { fr: "rester", de: "bleiben", cat: "verben", lesson: "m6" },
+      { fr: "j’espère que", de: "ich hoffe, dass", cat: "sonstiges", lesson: "m6" },
+      { fr: "arriver", de: "ankommen", cat: "verben", lesson: "m6" },
+      { fr: "bientôt", de: "bald", cat: "zeit", lesson: "m6" },
+      { fr: "À bientôt !", de: "Bis bald!", cat: "sonstiges", lesson: "m6" },
+      { fr: "cher / chère", de: "lieber / liebe + Anrede", cat: "sonstiges", lesson: "m6" },
+      { fr: "le rêve", de: "der Traum", cat: "sonstiges", lesson: "m6" },
+      { fr: "d’abord", de: "zuerst", cat: "zeit", lesson: "m6" },
+      { fr: "la plage", de: "der Strand", cat: "reise", lesson: "m6" },
+      { fr: "rentrer", de: "nach Hause fahren / gehen", cat: "verben", lesson: "m6" },
+      { fr: "après", de: "danach", cat: "zeit", lesson: "m6" },
+      { fr: "c’est l’heure de qc", de: "es ist Zeit für etwas", cat: "zeit", lesson: "m6" },
+      { fr: "la sieste", de: "der Mittagsschlaf, die Siesta", cat: "zeit", lesson: "m6" },
+      { fr: "le portable", de: "das Handy", cat: "sonstiges", lesson: "m6" },
+      { fr: "le soir", de: "der Abend, abends, am Abend", cat: "zeit", lesson: "m6" },
+      { fr: "le jour", de: "der Tag, tagsüber, am Tag", cat: "zeit", lesson: "m6" },
+      { fr: "la mer", de: "das Meer, die See", cat: "reise", lesson: "m6" },
+      { fr: "dehors", de: "draußen", cat: "reise", lesson: "m6" },
+      { fr: "longtemps", de: "lange", cat: "zeit", lesson: "m6" },
+      { fr: "le volcan", de: "der Vulkan", cat: "reise", lesson: "m6" },
+      { fr: "facile", de: "leicht, einfach", cat: "adjektive", lesson: "m6" },
+      { fr: "le bisou", de: "das Küsschen", cat: "sonstiges", lesson: "m6" }
     ];
+
+    // Alle bereits vorhandenen Vokabeln stammen aus Unité 4.
+    vocab.forEach(v => {
+      if (!v.lesson) v.lesson = "u4";
+    });
 
     let mode = "card";
     let current = null;
@@ -384,7 +494,11 @@
 
     function filteredVocab() {
       const cat = $("category").value;
-      return cat === "all" ? vocab : vocab.filter(v => v.cat === cat);
+      const lesson = $("lesson").value;
+      return vocab.filter(v =>
+        (cat === "all" || v.cat === cat) &&
+        (lesson === "all" || v.lesson === lesson)
+      );
     }
 
     function normalize(text) {
@@ -409,6 +523,16 @@
 
     function newQuestion() {
       const list = filteredVocab();
+      if (list.length === 0) {
+        current = null;
+        $("questionLabel").textContent = "Keine Treffer";
+        $("term").textContent = "Andere Filter wählen";
+        $("hint").textContent = "Für diese Kombination gibt es keine Vokabeln.";
+        $("feedback").className = "feedback";
+        $("cardAnswer").className = "feedback";
+        $("choices").innerHTML = "";
+        return;
+      }
       current = pickRandom(list);
       $("questionLabel").textContent = askKey() === "fr" ? "Französisch" : "Deutsch";
       $("term").textContent = current[askKey()];
@@ -521,6 +645,7 @@
     $("typedAnswer").addEventListener("keydown", e => { if (e.key === "Enter") checkTyped(); });
     $("newRound").onclick = newQuestion;
     $("category").onchange = () => { renderList(); newQuestion(); };
+    $("lesson").onchange = () => { renderList(); newQuestion(); };
     $("direction").onchange = newQuestion;
     $("modeCard").onclick = () => setMode("card");
     $("modeChoice").onclick = () => setMode("choice");
